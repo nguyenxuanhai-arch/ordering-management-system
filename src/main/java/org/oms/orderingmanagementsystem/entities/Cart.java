@@ -11,7 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "carts")
+@Table(
+        name = "carts",
+        indexes = {
+                @Index(name = "idx_cart_user", columnList = "user_id", unique = true)
+        }
+)
 public class Cart {
 
     @Id

@@ -1,9 +1,6 @@
 package org.oms.orderingmanagementsystem.entities;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -12,7 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
+@Table(
+        name = "cart_item",
+        indexes = {
+                @Index(name = "idx_cart_item_cart", columnList = "cart_id"),
+                @Index(name = "idx_cart_item_product", columnList = "product_id")
+        }
+)
 public class CartItem {
 
     @EmbeddedId

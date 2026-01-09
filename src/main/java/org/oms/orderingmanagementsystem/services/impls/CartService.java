@@ -1,4 +1,8 @@
 package org.oms.orderingmanagementsystem.services.impls;
 
-public class CartService {
+import org.oms.orderingmanagementsystem.services.interfaces.CartServiceInterface;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CartService implements CartServiceInterface {
 }

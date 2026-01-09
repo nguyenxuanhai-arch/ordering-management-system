@@ -1,4 +1,10 @@
 package org.oms.orderingmanagementsystem.services.impls;
 
-public class NotificationService {
+import lombok.RequiredArgsConstructor;
+import org.oms.orderingmanagementsystem.services.interfaces.NotificationServiceInterface;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class NotificationService implements NotificationServiceInterface {
 }

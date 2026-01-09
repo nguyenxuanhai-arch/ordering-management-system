@@ -1,0 +1,124 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE blacklisted_tokens;
+TRUNCATE TABLE refresh_tokens;
+TRUNCATE TABLE user_notification;
+TRUNCATE TABLE order_item;
+TRUNCATE TABLE orders;
+TRUNCATE TABLE cart_item;
+TRUNCATE TABLE carts;
+TRUNCATE TABLE user_role;
+TRUNCATE TABLE notifications;
+TRUNCATE TABLE products;
+TRUNCATE TABLE users;
+TRUNCATE TABLE roles;
+
+SET FOREIGN_KEY_CHECKS = 1;
+INSERT INTO roles (name)
+VALUES ('ROLE_USER'), ('ROLE_ADMIN');
+
+INSERT INTO users (email, password, phone, address)
+SELECT
+    CONCAT('user', n, '@test.com'),
+    '$2a$10$testhash',
+    CONCAT('09', LPAD(n, 8, '0')),
+    CONCAT('Address ', n)
+FROM (
+         SELECT
+             a.n + b.n*10 + c.n*100 + d.n*1000 + e.n*10000 + 1 AS n
+         FROM
+             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a,
+             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b,
+             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) c,
+             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d,
+             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) e
+     ) x
+WHERE n <= 100000;
+
+INSERT INTO user_role (user_id, role_id)
+SELECT u.id, r.id
+FROM users u
+         JOIN roles r ON r.name = 'ROLE_USER';
+
+INSERT INTO products (name, price, quantities, category, size, img_url, description)
+SELECT
+    CONCAT('Product ', n),
+    ROUND(RAND() * 100000, 2),
+    FLOOR(RAND() * 500),
+    CONCAT('CAT_', FLOOR(RAND() * 10)),
+    ELT(FLOOR(1 + RAND()*4), 'S','M','L','XL'),
+    'https://img.test/product.png',
+    'Test product'
+FROM (
+         SELECT
+             a.n + b.n*10 + c.n*100 + d.n*1000 + 1 AS n
+         FROM
+             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a,
+             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b,
+             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) c,
+             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d
+     ) x
+WHERE n <= 20000;
+
+INSERT INTO carts (user_id)
+SELECT id FROM users;
+
+INSERT INTO cart_item (cart_id, product_id, quantity)
+SELECT
+    c.id,
+    p.id,
+    FLOOR(RAND() * 3) + 1
+FROM carts c
+         JOIN products p
+WHERE p.id % 7 = 0;
+
+INSERT INTO orders (user_id, status)
+SELECT
+    u.id,
+    ELT(FLOOR(1 + RAND()*4), 'PENDING','PAID','SHIPPED','CANCELLED')
+FROM users u
+         JOIN (SELECT 1 UNION ALL SELECT 2) t;
+
+INSERT INTO order_item (order_id, product_id, created_at)
+SELECT
+    o.id,
+    p.id,
+    NOW()
+FROM orders o
+         JOIN products p
+WHERE p.id % 9 = 0;
+
+INSERT INTO notifications (title, body, created_at)
+SELECT
+    CONCAT('Notify ', n),
+    'System notification',
+    NOW()
+FROM (
+         SELECT a.n + b.n*10 + c.n*100 + 1 AS n
+         FROM
+             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a,
+             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b,
+             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) c
+     ) x
+WHERE n <= 1000;
+
+INSERT INTO user_notification (user_id, notification_id, is_read)
+SELECT
+    u.id,
+    n.id,
+    b'0'
+FROM users u
+         JOIN notifications n ON n.id = 1;
+
