@@ -19,55 +19,106 @@ VALUES ('ROLE_USER'), ('ROLE_ADMIN');
 
 INSERT INTO users (email, password, phone, address)
 SELECT
-    CONCAT('user', n, '@test.com'),
-    '$2a$10$testhash',
-    CONCAT('09', LPAD(n, 8, '0')),
-    CONCAT('Address ', n)
+    CONCAT(
+            SUBSTRING(MD5(RAND()), 1, 12),
+            '@',
+            SUBSTRING(MD5(RAND()), 1, 6),
+            '.com'
+    ) AS email,
+
+    '$2a$12$K8Jz6k5Yz9qzN1mZ4RkK3O7F6m9zXkZxRz6M1ZkF0wYJZpW9nQk6a' AS password,
+
+    CONCAT(
+            '0',
+            FLOOR(100000000 + RAND() * 899999999)
+    ) AS phone,
+
+    CONCAT(
+            'Addr-',
+            SUBSTRING(MD5(RAND()), 1, 12)
+    ) AS address
 FROM (
-         SELECT
-             a.n + b.n*10 + c.n*100 + d.n*1000 + e.n*10000 + 1 AS n
+         SELECT 1
          FROM
-             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+             (SELECT 0 UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
               UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a,
-             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+             (SELECT 0 UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
               UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b,
-             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+             (SELECT 0 UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
               UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) c,
-             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+             (SELECT 0 UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
               UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d,
-             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+             (SELECT 0 UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
               UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) e
-     ) x
-WHERE n <= 100000;
+             LIMIT 100000
+     ) t;
+
 
 INSERT INTO user_role (user_id, role_id)
 SELECT u.id, r.id
 FROM users u
          JOIN roles r ON r.name = 'ROLE_USER';
 
-INSERT INTO products (name, price, quantities, category, size, img_url, description)
+INSERT INTO products
+(name, price, quantities, category, size, img_url, description)
 SELECT
-    CONCAT('Product ', n),
-    ROUND(RAND() * 100000, 2),
-    FLOOR(RAND() * 500),
-    CONCAT('CAT_', FLOOR(RAND() * 10)),
-    ELT(FLOOR(1 + RAND()*4), 'S','M','L','XL'),
-    'https://img.test/product.png',
-    'Test product'
+    -- name: random, không theo thứ tự
+    CONCAT(
+            ELT(FLOOR(1 + RAND()*6),
+                'Ultra','Super','Pro','Max','Eco','Prime'
+            ),
+            ' ',
+            ELT(FLOOR(1 + RAND()*6),
+                'Sneaker','TShirt','Jacket','Bag','Watch','Hat'
+            ),
+            ' ',
+            SUBSTRING(MD5(RAND()), 1, 4)
+    ) AS name,
+
+    -- price: 10k → 5tr
+    ROUND(10000 + RAND() * 4990000, 2) AS price,
+
+    -- quantities: 0 → 1000
+    FLOOR(RAND() * 1000) AS quantities,
+
+    -- category: CAT_A → CAT_J
+    ELT(FLOOR(1 + RAND()*10),
+        'CAT_A','CAT_B','CAT_C','CAT_D','CAT_E',
+        'CAT_F','CAT_G','CAT_H','CAT_I','CAT_J'
+    ) AS category,
+
+    -- size
+    ELT(FLOOR(1 + RAND()*5), 'XS','S','M','L','XL') AS size,
+
+    -- img_url random (nhưng vẫn hợp lệ)
+    CONCAT(
+        'https://img.test/product_',
+        FLOOR(RAND()*1000),
+        '.png'
+    ) AS img_url,
+
+    -- description random
+    CONCAT(
+        'Product ',
+        SUBSTRING(MD5(RAND()), 1, 16),
+        ' description'
+    ) AS description
 FROM (
-         SELECT
-             a.n + b.n*10 + c.n*100 + d.n*1000 + 1 AS n
-         FROM
-             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
-              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a,
-             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
-              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b,
-             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
-              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) c,
-             (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
-              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d
-     ) x
-WHERE n <= 20000;
+    SELECT 1
+    FROM
+    (SELECT 0 UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+    UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a,
+    (SELECT 0 UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+    UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b,
+    (SELECT 0 UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+    UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) c,
+    (SELECT 0 UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+    UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d,
+    (SELECT 0 UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+    UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) e
+    LIMIT 20000
+    ) t;
+
 
 INSERT INTO carts (user_id)
 SELECT id FROM users;
@@ -88,7 +139,7 @@ SELECT
 FROM users u
          JOIN (SELECT 1 UNION ALL SELECT 2) t;
 
-INSERT INTO order_item (order_id, product_id, created_at)
+INSERT INTO order_item (order_id, product_id)
 SELECT
     o.id,
     p.id,
@@ -122,3 +173,25 @@ SELECT
 FROM users u
          JOIN notifications n ON n.id = 1;
 
+UPDATE users
+SET name = CONCAT(
+        ELT(FLOOR(1 + RAND() * 15),
+            'Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng',
+            'Huỳnh', 'Phan', 'Vũ', 'Võ', 'Đặng',
+            'Bùi', 'Đỗ', 'Hồ', 'Ngô', 'Dương'
+        ),
+        ' ',
+        ELT(FLOOR(1 + RAND() * 8),
+            'Văn', 'Thị', 'Hữu', 'Đức',
+            'Quang', 'Gia', 'Minh', 'Thanh'
+        ),
+        ' ',
+        ELT(FLOOR(1 + RAND() * 20),
+            'An', 'Anh', 'Bình', 'Cường', 'Dũng',
+            'Hải', 'Hiếu', 'Hùng', 'Khánh', 'Khoa',
+            'Long', 'Minh', 'Nam', 'Phong', 'Quân',
+            'Sơn', 'Thắng', 'Toàn', 'Trung', 'Vinh'
+        )
+           )
+WHERE name IS NULL
+    LIMIT 10000;
