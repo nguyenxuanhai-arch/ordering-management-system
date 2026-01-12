@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main}">
+
+<div th:fragment="content" class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Orders List</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> New Order
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="ordersTable" class="table table-bordered table-hover" data-table>
+                    <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>#12345</td>
+                        <td>John Doe</td>
+                        <td>$1,250.00</td>
+                        <td><span class="badge badge-success">Completed</span></td>
+                        <td>2026-01-10</td>
+                        <td>
+                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#12344</td>
+                        <td>Jane Smith</td>
+                        <td>$890.50</td>
+                        <td><span class="badge badge-warning">Pending</span></td>
+                        <td>2026-01-11</td>
+                        <td>
+                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#12343</td>
+                        <td>Bob Johnson</td>
+                        <td>$2,150.00</td>
+                        <td><span class="badge badge-info">Processing</span></td>
+                        <td>2026-01-09</td>
+                        <td>
+                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

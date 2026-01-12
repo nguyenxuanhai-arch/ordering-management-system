@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main}">
+
+<div th:fragment="content" class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Products Inventory</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Add Product
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="productsTable" class="table table-bordered table-hover" data-table>
+                    <thead>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>#P001</td>
+                        <td>Laptop Pro</td>
+                        <td>Electronics</td>
+                        <td>$1,299.99</td>
+                        <td><span class="badge badge-success">45</span></td>
+                        <td><span class="badge badge-success">Available</span></td>
+                        <td>
+                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#P002</td>
+                        <td>Wireless Mouse</td>
+                        <td>Accessories</td>
+                        <td>$49.99</td>
+                        <td><span class="badge badge-warning">5</span></td>
+                        <td><span class="badge badge-warning">Low Stock</span></td>
+                        <td>
+                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#P003</td>
+                        <td>Keyboard Mechanical</td>
+                        <td>Accessories</td>
+                        <td>$159.99</td>
+                        <td><span class="badge badge-danger">0</span></td>
+                        <td><span class="badge badge-danger">Out of Stock</span></td>
+                        <td>
+                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#P004</td>
+                        <td>USB-C Hub</td>
+                        <td>Accessories</td>
+                        <td>$79.99</td>
+                        <td><span class="badge badge-success">32</span></td>
+                        <td><span class="badge badge-success">Available</span></td>
+                        <td>
+                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
