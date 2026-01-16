@@ -62,25 +62,37 @@
 
                         <!-- PAGE INFO -->
                         <small class="text-muted">
-                            Page <strong th:text="${users.number + 1}"></strong>,
+                            Page <strong th:text="${users.number + 1}"></strong> /
+                            <strong th:text="${users.totalPages}"></strong>,
                             showing <strong th:text="${users.numberOfElements}"></strong>
-                            of <strong th:text="${users.size}"></strong> per page
+                            of <strong th:text="${users.totalElements}"></strong> users
                         </small>
 
                         <ul class="pagination pagination-sm mb-0">
+
+                            <!-- FIRST -->
+                            <li class="page-item" th:classappend="${users.first} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/users(
+                   page=1,
+                   keyword=${param.keyword}
+               )}">
+                                    ««
+                                </a>
+                            </li>
 
                             <!-- PREV -->
                             <li class="page-item" th:classappend="${users.first} ? 'disabled'">
                                 <a class="page-link"
                                    th:href="@{/users(
-                                       page=${users.number},
-                                       keyword=${param.keyword}
-                                   )}">
+                   page=${users.number},
+                   keyword=${param.keyword}
+               )}">
                                     «
                                 </a>
                             </li>
 
-                            <!-- CURRENT PAGE -->
+                            <!-- CURRENT -->
                             <li class="page-item active">
                                 <span class="page-link" th:text="${users.number + 1}"></span>
                             </li>
@@ -89,10 +101,21 @@
                             <li class="page-item" th:classappend="${users.last} ? 'disabled'">
                                 <a class="page-link"
                                    th:href="@{/users(
-                                       page=${users.number + 2},
-                                       keyword=${param.keyword}
-                                   )}">
+                   page=${users.number + 2},
+                   keyword=${param.keyword}
+               )}">
                                     »
+                                </a>
+                            </li>
+
+                            <!-- LAST -->
+                            <li class="page-item" th:classappend="${users.last} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/users(
+                   page=${users.totalPages},
+                   keyword=${param.keyword}
+               )}">
+                                    »»
                                 </a>
                             </li>
 
