@@ -13,56 +13,115 @@
                 </div>
             </div>
             <div class="card-body">
-                <table id="ordersTable" class="table table-bordered table-hover" data-table>
-                    <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Customer</th>
-                        <th>Total Amount</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>#12345</td>
-                        <td>John Doe</td>
-                        <td>$1,250.00</td>
-                        <td><span class="badge badge-success">Completed</span></td>
-                        <td>2026-01-10</td>
-                        <td>
-                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#12344</td>
-                        <td>Jane Smith</td>
-                        <td>$890.50</td>
-                        <td><span class="badge badge-warning">Pending</span></td>
-                        <td>2026-01-11</td>
-                        <td>
-                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#12343</td>
-                        <td>Bob Johnson</td>
-                        <td>$2,150.00</td>
-                        <td><span class="badge badge-info">Processing</span></td>
-                        <td>2026-01-09</td>
-                        <td>
-                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+
+                <!-- SEARCH -->
+                <form method="get" th:action="@{/orders}" class="form-inline mb-3">
+                    <input type="text"
+                           name="keyword"
+                           class="form-control form-control-sm mr-2"
+                           placeholder="Search..."
+                           th:value="${param.keyword}">
+                    <button type="submit" class="btn btn-sm btn-primary">Search</button>
+                </form>
+
+                <!-- EMPTY STATE -->
+                <div th:if="${orders.empty}" class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No users found.
+                </div>
+
+
+                <div th:if="${!orders.empty}">
+                    <table id="ordersTable" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Subtotal</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="order : ${orders.content}">
+                            <td th:text="${order.id}"></td>
+                            <td th:text="${order.username}"></td>
+                            <td th:text="${#numbers.formatDecimal(order.subtotal, 1, 'POINT', 2, 'COMMA')} + ' VND'"></td>
+                            <td><span class="badge badge-success" th:text="${order.status}"></span></td>
+                            <td th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd')}"></td>
+                            <td>
+                                <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+
+                        <!-- PAGE INFO -->
+                        <small class="text-muted">
+                            Page <strong th:text="${orders.number + 1}"></strong> /
+                            <strong th:text="${orders.totalPages}"></strong>,
+                            showing <strong th:text="${orders.numberOfElements}"></strong>
+                            of <strong th:text="${orders.totalElements}"></strong> users
+                        </small>
+
+                        <ul class="pagination pagination-sm mb-0">
+
+                            <!-- FIRST -->
+                            <li class="page-item" th:classappend="${orders.first} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/orders(
+                   page=1,
+                   keyword=${param.keyword}
+               )}">
+                                    ««
+                                </a>
+                            </li>
+
+                            <!-- PREV -->
+                            <li class="page-item" th:classappend="${orders.first} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/orders(
+                   page=${orders.number},
+                   keyword=${param.keyword}
+               )}">
+                                    «
+                                </a>
+                            </li>
+
+                            <!-- CURRENT -->
+                            <li class="page-item active">
+                                <span class="page-link" th:text="${orders.number + 1}"></span>
+                            </li>
+
+                            <!-- NEXT -->
+                            <li class="page-item" th:classappend="${orders.last} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/orders(
+                   page=${orders.number + 2},
+                   keyword=${param.keyword}
+               )}">
+                                    »
+                                </a>
+                            </li>
+
+                            <!-- LAST -->
+                            <li class="page-item" th:classappend="${orders.last} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/orders(
+                   page=${orders.totalPages},
+                   keyword=${param.keyword}
+               )}">
+                                    »»
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
