@@ -148,7 +148,7 @@ FROM orders o
          JOIN products p
 WHERE p.id % 9 = 0;
 
-INSERT INTO notifications (title, body, created_at)
+INSERT INTO notification (title, body, created_at)
 SELECT
     CONCAT('Notify ', n),
     'System notification',
@@ -171,7 +171,8 @@ SELECT
     n.id,
     b'0'
 FROM users u
-         JOIN notifications n ON n.id = 1;
+         JOIN notifications n ON n.id = 1
+LIMIT 10000;
 
 UPDATE users
 SET name = CONCAT(
