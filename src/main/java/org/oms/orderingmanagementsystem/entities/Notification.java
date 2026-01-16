@@ -1,24 +1,12 @@
 package org.oms.orderingmanagementsystem.entities;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-
+import lombok.Data;
 import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
-@Table(
-        name = "notifications",
-        indexes = {
-                @Index(name = "idx_notification_created", columnList = "createdAt")
-        }
-)
+@Data // Dòng này sẽ tự tạo Getter/Setter cho id, title, body, createdAt
 public class Notification {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,5 +14,8 @@ public class Notification {
     private String title;
     private String body;
     private LocalDateTime createdAt;
-}
 
+    public String getMessage() {
+        return this.body; // Thêm dòng này vào để trả về nội dung thông báo
+    }
+}

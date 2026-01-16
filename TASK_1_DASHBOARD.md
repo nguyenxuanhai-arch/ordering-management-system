@@ -1,4 +1,4 @@
-# 📝 TASK 1 DETAIL: Dashboard Page - Display Statistics
+    # 📝 TASK 1 DETAIL: Dashboard Page - Display Statistics
 
 ## 🎯 Mục Tiêu
 Hiển thị thống kê tổng quan:
@@ -118,8 +118,6 @@ List<Notification> findTop10ByOrderByCreatedAtDesc();
 
 ```java
 package org.oms.orderingmanagementsystem.services.interfaces;
-
-import org.oms.orderingmanagementsystem.dtos.response.DashboardResponse;
 
 public interface DashboardServiceInterface {
     DashboardResponse getDashboardStatistics();
