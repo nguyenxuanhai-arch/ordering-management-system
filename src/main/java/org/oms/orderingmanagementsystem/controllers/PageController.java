@@ -2,10 +2,14 @@ package org.oms.orderingmanagementsystem.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.oms.orderingmanagementsystem.dtos.response.DashboardResponse;
+import org.oms.orderingmanagementsystem.dtos.response.UserResponse;
+import org.oms.orderingmanagementsystem.services.impls.UserService;
 import org.oms.orderingmanagementsystem.services.interfaces.DashboardServiceInterface;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor // Tự động kết nối với DashboardService
@@ -13,7 +17,7 @@ public class PageController {
 
     // Khai báo Service để lấy dữ liệu cho Task 1
     private final DashboardServiceInterface dashboardService;
-
+    private final UserService userService;
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
         // 1. Lấy dữ liệu thực tế từ Database thông qua Service
@@ -42,9 +46,14 @@ public class PageController {
     }
 
     @GetMapping("/users")
+
     public String users(Model model) {
+        List<UserResponse> userList = userService.getAllUsers();
+
+        model.addAttribute("users", userList);
         model.addAttribute("pageTitle", "Users");
         model.addAttribute("activePage", "users");
+
         return "users";
     }
 }
