@@ -68,7 +68,15 @@
                             <td th:text="${order.orderNumber}">ORD-123</td>
                             <td th:text="${order.customerName}">Nguyễn Văn A</td>
                             <td>
-                                <span th:text="${order.status}" th:class="${order.status}">Pending</span>
+                                <span class="badge"
+                                      th:classappend="${order.status == 'COMPLETED' ? 'badge-success' :
+                       order.status == 'PENDING'   ? 'badge-warning' :
+                       order.status == 'CANCELLED' ? 'badge-danger' :
+                       order.status == 'SHIPPED'   ? 'badge-primary' :
+                       order.status == 'PAID'      ? 'badge-info' : 'badge-secondary'}"
+                                      th:text="${order.status}">
+</span>
+
                             </td>
                             <td th:text="${#temporals.format(order.createdAt, 'dd-MM-yyyy HH:mm')}">15-01-2024</td>
                         </tr>
@@ -87,9 +95,9 @@
                     <ul class="nav flex-column">
                         <li class="nav-item border-bottom" th:each="activity : ${dashboard.recentActivities}">
                             <a href="#" class="nav-link">
-                                <i class="fas fa-circle" th:classappend="${activity.type}"></i>
-                                <span th:text="${activity.message}">New Order</span>
-                                <span class="float-right text-muted text-sm" th:text="${#dates.format(activity.createdAt, 'HH:mm a')}">5 mins ago</span>
+                                <i class="fas fa-circle" th:classappend="${activity.color}"></i>
+                                <span th:text="${activity.description}">New Order</span>
+                                <span class="float-right text-muted text-sm" th:text="${#temporals.format(activity.createdAt, 'HH:mm a')}">5 mins ago</span>
                             </a>
                         </li>
                     </ul>
