@@ -1,9 +1,11 @@
 package org.oms.orderingmanagementsystem.repositories;
 
-import org.oms.orderingmanagementsystem.entities.Notification;
+import org.oms.orderingmanagementsystem.entities.Notification; // Nhớ import entity Notification
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
-@Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
+
+    // Thêm dòng này vào đây
+    List<Notification> findTop10ByOrderByCreatedAtDesc();
 }

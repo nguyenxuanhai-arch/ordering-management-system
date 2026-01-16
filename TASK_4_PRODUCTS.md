@@ -116,8 +116,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.oms.orderingmanagementsystem.dtos.response.ProductResponse;
 import org.oms.orderingmanagementsystem.mappers.ProductMapper;
-import org.oms.orderingmanagementsystem.repositories.ProductRepository;
 import org.oms.orderingmanagementsystem.services.interfaces.ProductServiceInterface;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -125,18 +125,18 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductService implements ProductServiceInterface {
-    
+
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
-    
+
     @Override
     public List<ProductResponse> getAllProducts() {
         return productRepository.findAll()
-            .stream()
-            .map(productMapper::toResponse)
-            .collect(Collectors.toList());
+                .stream()
+                .map(productMapper::toResponse)
+                .collect(Collectors.toList());
     }
-    
+
     @Override
     public ProductResponse getProductById(Long id) {
         Optional<Product> product = productRepository.findById(id);
