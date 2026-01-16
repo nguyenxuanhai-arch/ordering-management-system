@@ -36,11 +36,11 @@ public class OrderService extends BaseService implements OrderServiceInterface {
     @Override
     public Page<OrderResponse> pagination(Map<String, String[]> params) {
         int page = params.containsKey("page") ? Integer.parseInt(params.get("page")[0]) - 1 : 0;
-        int size = params.containsKey("perPage") ? Integer.parseInt(params.get("perPage")[0]) : 12;
+        int size = params.containsKey("perPage") ? Integer.parseInt(params.get("perPage")[0]) : 20;
 
         // FIXED: Enforce max page size
         if (size <= 0) {
-            size = 12;
+            size = 20;
         } else if (size > MAX_PAGE_SIZE) {
             size = MAX_PAGE_SIZE;
         }

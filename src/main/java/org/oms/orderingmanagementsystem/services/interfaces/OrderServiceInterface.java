@@ -9,5 +9,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface OrderServiceInterface {
-    Slice<OrderResponse> pagination(Map<String, String[]> params);
+    Page<OrderResponse> pagination(Map<String, String[]> params);
 }

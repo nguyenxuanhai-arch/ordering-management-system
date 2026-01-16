@@ -10,12 +10,14 @@ import org.oms.orderingmanagementsystem.entities.OrderItem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
 
     @Mapping(target = "username", source = "user.name")
+    @Mapping(target = "subtotal", expression = "java(calculateSubtotal(order))")
     OrderResponse toResponse(Order order);
 
     @Mapping(target = "productName", source = "product.name")
@@ -27,5 +29,11 @@ public interface OrderMapper {
 
     default Page<OrderResponse> toPageResponse(Page<Order> orders) {
         return orders.map(this::toResponse);
+    }
+
+    default BigDecimal calculateSubtotal(Order order) {
+        return order.getItems().stream()
+                .map(OrderItem::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
