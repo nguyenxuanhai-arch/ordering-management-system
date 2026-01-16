@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 @Entity
-@Data // Dòng này sẽ tự tạo Getter/Setter cho id, title, body, createdAt
+@Data
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
