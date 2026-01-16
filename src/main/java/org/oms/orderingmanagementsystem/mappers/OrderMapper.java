@@ -25,7 +25,7 @@ public interface OrderMapper {
 
     List<OrderResponse> toListResponse(List<Order> orders);
 
-    default Slice<OrderResponse> toPageResponse(Slice<Order> orders) {
+    default Page<OrderResponse> toPageResponse(Page<Order> orders) {
         return orders.map(this::toResponse);
     }
 }

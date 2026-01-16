@@ -1,11 +1,20 @@
 package org.oms.orderingmanagementsystem.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.oms.orderingmanagementsystem.dtos.response.DashboardResponse;
+import org.oms.orderingmanagementsystem.dtos.response.UserResponse;
+import org.oms.orderingmanagementsystem.services.impls.UserService;
 import org.oms.orderingmanagementsystem.services.interfaces.DashboardServiceInterface;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor // Tự động kết nối với DashboardService
@@ -13,7 +22,7 @@ public class PageController {
 
     // Khai báo Service để lấy dữ liệu cho Task 1
     private final DashboardServiceInterface dashboardService;
-
+    private final UserService userService;
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
         // 1. Lấy dữ liệu thực tế từ Database thông qua Service
@@ -42,9 +51,19 @@ public class PageController {
     }
 
     @GetMapping("/users")
-    public String users(Model model) {
+    public String users(HttpServletRequest request, Model model) {
+        Map<String, String[]> params = new HashMap<>(request.getParameterMap());
+        params.putIfAbsent("page", new String[]{"1"});
+
+        Slice<UserResponse> userList = userService.pagination(params);
+
+        model.addAttribute("users", userList);
         model.addAttribute("pageTitle", "Users");
         model.addAttribute("activePage", "users");
+
         return "users";
     }
+
+
+
 }

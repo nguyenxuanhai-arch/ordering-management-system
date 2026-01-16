@@ -34,7 +34,7 @@ public class OrderService extends BaseService implements OrderServiceInterface {
      */
     @Transactional
     @Override
-    public Slice<OrderResponse> pagination(Map<String, String[]> params) {
+    public Page<OrderResponse> pagination(Map<String, String[]> params) {
         int page = params.containsKey("page") ? Integer.parseInt(params.get("page")[0]) - 1 : 0;
         int size = params.containsKey("perPage") ? Integer.parseInt(params.get("perPage")[0]) : 12;
 
@@ -72,9 +72,8 @@ public class OrderService extends BaseService implements OrderServiceInterface {
             specification = specification.and(BaseSpecification.complexWhereSpec(filterComplex));
         }
 
-        Slice<Order> orders = orderRepository.findAll(specification, pageable);
+        Page<Order> orders = orderRepository.findAllSlice(specification, pageable);
 
-        // Map to OrderResponse WITHIN transaction so lazy relationships are accessible
         return orderMapper.toPageResponse(orders);
     }
 }

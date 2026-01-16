@@ -12,74 +12,94 @@
                     </button>
                 </div>
             </div>
+
             <div class="card-body">
-                <table id="usersTable" class="table table-bordered table-hover" data-table>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Joined Date</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>John Doe</td>
-                        <td>john@example.com</td>
-                        <td><span class="badge badge-primary">Admin</span></td>
-                        <td><span class="badge badge-success">Active</span></td>
-                        <td>2025-06-15</td>
-                        <td>
-                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Jane Smith</td>
-                        <td>jane@example.com</td>
-                        <td><span class="badge badge-secondary">User</span></td>
-                        <td><span class="badge badge-success">Active</span></td>
-                        <td>2025-07-20</td>
-                        <td>
-                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Bob Johnson</td>
-                        <td>bob@example.com</td>
-                        <td><span class="badge badge-secondary">User</span></td>
-                        <td><span class="badge badge-danger">Inactive</span></td>
-                        <td>2025-08-10</td>
-                        <td>
-                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Alice Williams</td>
-                        <td>alice@example.com</td>
-                        <td><span class="badge badge-secondary">User</span></td>
-                        <td><span class="badge badge-success">Active</span></td>
-                        <td>2025-09-05</td>
-                        <td>
-                            <button class="btn btn-info btn-sm"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+
+                <!-- SEARCH -->
+                <form method="get" th:action="@{/users}" class="form-inline mb-3">
+                    <input type="text"
+                           name="keyword"
+                           class="form-control form-control-sm mr-2"
+                           placeholder="Search..."
+                           th:value="${param.keyword}">
+                    <button type="submit" class="btn btn-sm btn-primary">Search</button>
+                </form>
+
+                <!-- EMPTY STATE -->
+                <div th:if="${users.empty}" class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No users found.
+                </div>
+
+                <!-- TABLE -->
+                <div th:if="${!users.empty}">
+                    <table id="usersTable" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${users.content}">
+                            <td th:text="${user.id}"></td>
+                            <td th:text="${user.name}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td th:text="${user.phone != null ? user.phone : '-'}"></td>
+                            <td>
+                                <button class="btn btn-info btn-sm" title="View"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-warning btn-sm" title="Edit"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger btn-sm" title="Delete"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- PAGINATION -->
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+
+                        <!-- PAGE INFO -->
+                        <small class="text-muted">
+                            Page <strong th:text="${users.number + 1}"></strong>,
+                            showing <strong th:text="${users.numberOfElements}"></strong>
+                            of <strong th:text="${users.size}"></strong> per page
+                        </small>
+
+                        <ul class="pagination pagination-sm mb-0">
+
+                            <!-- PREV -->
+                            <li class="page-item" th:classappend="${users.first} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/users(
+                                       page=${users.number},
+                                       keyword=${param.keyword}
+                                   )}">
+                                    «
+                                </a>
+                            </li>
+
+                            <!-- CURRENT PAGE -->
+                            <li class="page-item active">
+                                <span class="page-link" th:text="${users.number + 1}"></span>
+                            </li>
+
+                            <!-- NEXT -->
+                            <li class="page-item" th:classappend="${users.last} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/users(
+                                       page=${users.number + 2},
+                                       keyword=${param.keyword}
+                                   )}">
+                                    »
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

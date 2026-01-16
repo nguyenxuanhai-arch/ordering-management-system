@@ -25,15 +25,29 @@ public class BaseSpecification {
 
     public static <T> Specification<T> keyword(String keyword, String... fields) {
         return (root, query, cb) -> {
-            if (keyword == null || keyword.isEmpty()) return cb.conjunction();
-            Predicate[] preds = new Predicate[fields.length];
-            for (int i = 0; i < fields.length; i++) {
-                Path<?> p = resolvePath(root, fields[i]);
-                preds[i] = cb.like(cb.lower(p.as(String.class)), "%" + keyword.toLowerCase() + "%");
+            if (keyword == null || keyword.isBlank()) {
+                return cb.conjunction();
             }
-            return cb.or(preds);
+
+            String kw = keyword.trim().toLowerCase();
+            List<Predicate> preds = new java.util.ArrayList<>();
+
+            for (String field : fields) {
+                Path<?> p = resolvePath(root, field);
+
+                // phone & email: ưu tiên prefix match → dùng được index
+                if ("phone".equalsIgnoreCase(field) || "email".equalsIgnoreCase(field)) {
+                    preds.add(cb.like(cb.lower(p.as(String.class)), kw + "%"));
+                } else {
+                    // name, address: fallback contains
+                    preds.add(cb.like(cb.lower(p.as(String.class)), "%" + kw + "%"));
+                }
+            }
+
+            return cb.or(preds.toArray(new Predicate[0]));
         };
     }
+
 
     /** So khớp == cho các cặp phẳng (tự ép kiểu theo Java type của field) */
     public static <T> Specification<T> whereSpec(Map<String, String> filter) {
